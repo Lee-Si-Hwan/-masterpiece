@@ -29,8 +29,8 @@ def detect_object(center,face):
     w,h=np.array(face[2:4])
     
     center=np.array(center)
-    gap1=np.multiply((w,h) * (0.45,0.65))
-    gap2 = np.multiply((w,h) * (0.18,0.1))
+    gap1=np.multiply((w,h),(0.18,0.1)) #TODO multiply something
+    gap2 = np.multiply((w,h) , (0.18,0.1))
 
     pt1=center-gap1
     pt2=center+gap1
