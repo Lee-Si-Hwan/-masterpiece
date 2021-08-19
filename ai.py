@@ -30,7 +30,7 @@ def make(dot):
     return dot
 
 def score(data):
-    
+    print("[눈1,눈2,코,입]:",data)
     num = list()
     for dots in masterPieces.values():
         temp = 0
@@ -59,7 +59,7 @@ def score(data):
 
 if __name__ == "__main__":
 
-    fileName = input()
+    fileName = input("파일 경로를 입력하시오: ")
     try:
         face_image,eye1,eye2,nose,mouth=faceDetector.detect(fileName)
         
