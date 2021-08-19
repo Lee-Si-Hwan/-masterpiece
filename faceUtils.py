@@ -1,11 +1,11 @@
 import cv2,numpy as np
-def preprocess():
-    image=cv2.imread('img.jpg',cv2.IMREAD_COLOR)
+def loadImage(imgName):
+    image=cv2.imread(imgName,cv2.IMREAD_COLOR)
     if image is None : return None, None
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     gray = cv2.equalizeHist(gray)
     return image,gray
-def correct_image(image,face_center,eye_centers):
+def correctImage(image,face_center,eye_centers):
     pt0, pt1 = eye_centers
     if pt0[0] > pt1[0]:
         pt0,pt1=pt1,pt0
@@ -23,9 +23,9 @@ def correct_image(image,face_center,eye_centers):
     corr_centers = np.squeeze(corr_centers,axis=0)
 
     return corr_image,corr_centers
-def define_roi(pt,size):
+def defineRoi(pt,size):
     return np.ravel((pt, size)).astype('int')
-def detect_object(center,face):
+def detectObject(center,face):
     w,h=np.array(face[2:4])
     
     center=np.array(center)
@@ -34,15 +34,15 @@ def detect_object(center,face):
 
     pt1=center-gap1
     pt2=center+gap1
-    hair=define_roi(pt1,pt2-pt1)
+    hair=defineRoi(pt1,pt2-pt1)
 
     size=np.multiply(hair[2:4],(1,0.4))
-    hair1=define_roi(pt1,size)
-    hair2=define_roi(pt2-size,size)
+    hair1=defineRoi(pt1,size)
+    hair2=defineRoi(pt2-size,size)
 
     lip_center=center+(0,int(h*0.3))
     lip1=lip_center-gap2
     lip2=lip_center+gap2
-    lip=define_roi(lip1,lip2-lip1)
+    lip=defineRoi(lip1,lip2-lip1)
 
     return [hair1,hair2,lip,hair]
