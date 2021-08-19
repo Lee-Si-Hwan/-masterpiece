@@ -2,10 +2,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch ai.py",
+            "name": "Launch",
             "type": "python",
             "request": "launch",
-            "program": "ai.py",
+            "program": "main.py",
             "console": "integratedTerminal"
         }
     ]

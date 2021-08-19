@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import random
 import math
-import faceDetector
 
 masterPieces = {"1": [[100,100], [150, 100], [120, 150], [120, 210]],
                "2": [[130,100], [170, 130], [125, 160], [112, 190]],
@@ -58,17 +57,5 @@ def score(data):
     plt.gca().invert_yaxis()
     plt.show()
 
-if __name__ == "__main__":
 
-    fileName = input("파일 경로를 입력하시오: ")
-    try:
-        face_image,eye1,eye2,nose,mouth=faceDetector.detect(fileName)
-        
-        score([eye1,eye2,nose,mouth])
-    except faceDetector.readError:
-        print("Image read Error")
-    except faceDetector.noFaceException:
-        print("no Face Detected.")
-    except faceDetector.noEyesException:
-        print("no Eyes Detected.")
     
