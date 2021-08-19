@@ -32,13 +32,11 @@ def detect(imgName):
                 eye_centers=[(x+ex+ew//2,y+ey+eh//2) for ex,ey,ew,eh in eyes]
                 corr_image, corr_center = correctImage(image,face_center_f,eye_centers)
                 rois=detectObject(face_center,faces[0])
-                print(2)
-                # cv2.rectangle(corr_image,rois[0],(255,0,255),2)
-                # cv2.rectangle(corr_image,rois[1],(255,0,255),2)
+                
+
                 cv2.rectangle(corr_image,rois[2],(255,0,0),2)
-                print(corr_center[0]) # 눈 1
-                print(corr_center[1]) # 눈 2
-                print(face_center)
+                print(corr_center[0])
+
                 cv2.circle(corr_image,tuple(corr_center[0]),5,(0,255,0),2)
                 cv2.circle(corr_image,tuple(corr_center[1]),5,(0,255,0),2)
                 cv2.circle(corr_image,face_center,3,(0,0,255),2)
@@ -48,7 +46,9 @@ def detect(imgName):
                 
                 resizedImage = cv2.resize(image, dsize=(600,600),interpolation=cv2.INTER_LINEAR)
                 cv2.imshow("yeah",image)
-                return resizedImage,list(corr_center[0]),list(corr_center[1]),list(face_center),list(rois[2])
+
+                mouthPos=[rois[2][0]+rois[2][2]//2,rois[2][1]+rois[2][3]//2]
+                return resizedImage,list(corr_center[0]),list(corr_center[1]),list(face_center),mouthPos
             
             else:
                 raise noEyesException("no Eye")
