@@ -15,10 +15,10 @@ eye_cascade = cv2.CascadeClassifier("haar/haarcascade_eye.xml")
 
 def detect(imgName):
     image,gray=loadImage(imgName)
+    if image is None : raise readError("read error")
     imgHeight,imgWidth,color=image.shape
     
 
-    if image is None : raise readError("read error")
 
     faces = face_cascade.detectMultiScale(gray,1.1,2,0,(100,100))
     try:

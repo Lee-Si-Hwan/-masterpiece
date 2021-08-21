@@ -6,10 +6,10 @@ resultCoordinates=list()
 noFaceList=list()
 noEyesList=list()
 if __name__ == "__main__":
-
+    #range(ord('a'),ord('n')+1)
     #fileName = input("파일 경로를 입력하시오: ")
-    for imgName in range(ord('a'),ord('n')+1):#in ['a','g','j','k']:
-        fileName='img/'+chr(imgName)+'.PNG'
+    for imgName in ['a','b','c','d']:#in ['a','g','j','k']:
+        fileName='img/'+imgName+'.PNG'
         try:
             
             face_image,eye1,eye2,nose,mouth,imgWidth,imgHeight=faceDetector.detect(fileName)
