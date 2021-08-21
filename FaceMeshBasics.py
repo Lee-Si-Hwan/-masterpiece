@@ -6,7 +6,7 @@ mpFaceMesh = mp.solutions.face_mesh
 faceMesh = mpFaceMesh.FaceMesh(max_num_faces=3)
 drawSpec = mpDraw.DrawingSpec(thickness=1, circle_radius=3, color=(255,255,255))
 
-img=cv2.imread("test.jpg")
+img=cv2.imread("img\\c.jpg")
 imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 results = faceMesh.process(imgRGB)
 

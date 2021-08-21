@@ -7,8 +7,18 @@ masterPieces = {"1": [[100,100], [150, 100], [120, 150], [120, 210]],
                "2": [[130,100], [170, 130], [125, 160], [112, 190]],
                 "진주 귀걸이를 한 소녀": [[169, 215], [223, 215], [197, 234], [196, 279]]}
 
+def resizeCoordinates(data,imgWidth):
+    eye1,eye2,nose,mouth=data
+    asdf = 512/imgWidth
+    for x in range(4):
+        for y in range(2):
+            data[x][y]*=asdf
+            data[x][y]=int(data[x][y])
+    return data
+
+
 def length(a, b):
-    return math.sqrt((a[0]-b[0])**2 + (a[1]-b[1]))
+    return math.sqrt((a[0]-b[0])**2 + (a[1]-b[1])**2)
 
 def cart2pol(x, y):
     rho = np.sqrt(x**2 + y**2)
@@ -29,7 +39,8 @@ def make(dot):
         dot[i][1] -= y
     return dot
 
-def score(data):
+def score(data,imgWidth):
+    data=resizeCoordinates(data,imgWidth)
     print("[눈1,눈2,코,입]:",data)
     num = list()
     for dots in masterPieces.values():
@@ -57,5 +68,6 @@ def score(data):
     plt.gca().invert_yaxis()
     plt.show()
 
+    return data
 
     

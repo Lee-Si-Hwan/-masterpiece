@@ -15,6 +15,8 @@ eye_cascade = cv2.CascadeClassifier("haar/haarcascade_eye.xml")
 
 def detect(imgName):
     image,gray=loadImage(imgName)
+    imgHeight,imgWidth,color=image.shape
+    
 
     if image is None : raise readError("read error")
 
@@ -33,7 +35,6 @@ def detect(imgName):
                 corr_image, corr_center = correctImage(image,face_center_f,eye_centers)
                 rois=detectObject(face_center,faces[0])
                 
-
                 cv2.rectangle(corr_image,rois[2],(255,0,0),2)
                 print(corr_center[0])
 
@@ -41,14 +42,15 @@ def detect(imgName):
                 cv2.circle(corr_image,tuple(corr_center[1]),5,(0,255,0),2)
                 cv2.circle(corr_image,face_center,3,(0,0,255),2)
 
-                cv2.imshow("yeeee",corr_image)
+                resizedCorrImage=cv2.resize(corr_image,dsize=(512,512),interpolation=cv2.INTER_LINEAR)
+                cv2.imshow("CORR_IMAGE",resizedCorrImage)
                 cv2.rectangle(image,faces[0],(255,0,0),2)
                 
-                resizedImage = cv2.resize(image, dsize=(600,600),interpolation=cv2.INTER_LINEAR)
-                cv2.imshow("yeah",image)
+                resizedImage = cv2.resize(image, dsize=(512,512),interpolation=cv2.INTER_LINEAR)
+                cv2.imshow("RESIZED_IMAGE",resizedImage)
 
                 mouthPos=[rois[2][0]+rois[2][2]//2,rois[2][1]+rois[2][3]//2]
-                return resizedImage,list(corr_center[0]),list(corr_center[1]),list(face_center),mouthPos
+                return resizedImage,list(corr_center[0]),list(corr_center[1]),list(face_center),mouthPos,imgWidth,imgHeight
             
             else:
                 raise noEyesException("no Eye")
