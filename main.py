@@ -7,24 +7,22 @@ noFaceList=list()
 noEyesList=list()
 if __name__ == "__main__":
     #range(ord('a'),ord('n')+1)
-    #fileName = input("파일 경로를 입력하시오: ")
-    for imgName in ['a','b','c','d']:#in ['a','g','j','k']:
-        fileName='img/'+imgName+'.PNG'
-        try:
+    fileName = input("파일 경로를 입력하시오: ")
+    
+    try:
+        face_image,eye1,eye2,nose,mouth,imgWidth,imgHeight=faceDetector.detect(fileName)
             
-            face_image,eye1,eye2,nose,mouth,imgWidth,imgHeight=faceDetector.detect(fileName)
-            
-            data=ai.score([eye1,eye2,nose,mouth],imgWidth)
-            resultCoordinates.append(data)
-            successedFile.append(fileName)
-        except faceDetector.readError:
-            print("Image read Error")
-        except faceDetector.noFaceException:
-            print("no Face Detected. Please Specify the area of face.")
-            noFaceList.append(fileName)
-        except faceDetector.noEyesException:
-            print("no Eyes Detected.")
-            noEyesList.append(fileName)
+        data=ai.score([eye1,eye2,nose,mouth])
+        resultCoordinates.append(data)
+        successedFile.append(fileName)
+    except faceDetector.readError:
+        print("Image read Error")
+    except faceDetector.noFaceException:
+        print("no Face Detected. Please Specify the area of face.")
+        noFaceList.append(fileName)
+    except faceDetector.noEyesException:
+        print("no Eyes Detected.")
+        noEyesList.append(fileName)
     print(successedFile)
     print(resultCoordinates)
     print(noFaceList)
