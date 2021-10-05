@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 from remove_noise import *
+import histogram
 
 hscale = 0
 
@@ -31,12 +32,11 @@ def hist2D(filename):
 
     hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
 
-    hist = cv2.calcHist([hsv],[0,1],None,[180,256],[0,180,0,256])
-    hist = np.clip(hist*0.005*scale,0,1)
-    hist = hsvmap*hist[:,:,np.newaxis] / 255.0
-
-    cv2.imshow('hist2D',hist)
-    cv2.waitKey(0)
+    hist = cv2.calcHist([hsv],[0],None,[180],[0,180])
+    
+    histogram.save(filename+'.histogram',hist)
+    plt.plot(hist)
+    plt.show()
     
 k=input()
 hist2D('../img/'+k)
