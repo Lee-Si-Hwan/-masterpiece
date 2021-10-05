@@ -3,6 +3,7 @@ from PIL import Image, ImageTk
 import tkinter as tk
 import ai
 from tkinter import filedialog as fd
+import os
 im = None
 tk_img = None
 window=None
@@ -26,7 +27,7 @@ def process():
     print(1234)
     print(yeah)
     info2Lbl.config(text=yeah)
-    print(1)
+    os.startfile('.\\명화\\'+yeah+'.jpg','open')
     
 def draw(event):
     global x1,y1,data
@@ -85,7 +86,7 @@ def click(e):
         
 window=Tk()
 window.title("스케치북")
-window.geometry("700x720+100+100")
+window.geometry("700x720+0+0")
 canvas=Canvas(window,width=700,height=600,bg="white")
 
 canvas.place(x=0,y=20)

@@ -61,8 +61,8 @@ def score(data):
     result=(list(masterPieces.keys())[num.index(num[0])]) #예측 결과 출력
     print("yeah yeeyeah")
     print(result)
-    '''
     
+    '''
     for i in masterPieces.values():
         make(i)
         colors = [random.random(), random.random(), random.random(), 1]
@@ -78,6 +78,6 @@ def score(data):
     plt.ylim([-256, 256])     # Y축의 범위: [ymin, ymax]
     plt.grid(True)
     plt.gca().invert_yaxis()
-    plt.show() '''
+    plt.show()'''
     return result
     

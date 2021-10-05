@@ -8,7 +8,11 @@
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
+<<<<<<< Updated upstream
             "program": "${file}",
+=======
+            "program": "canvas.py",
+>>>>>>> Stashed changes
             "console": "integratedTerminal"
         }
     ]
