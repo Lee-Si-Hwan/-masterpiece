@@ -1,16 +1,8 @@
-import cv2
-import numpy as np
-from matplotlib import pyplot as plt
+   
+import cv2, numpy as np
+import matplotlib.pylab as plt
 from remove_noise import *
 import histogram
-import compareHIst
-
-hscale = 0
-
-def onChange(x):
-    global hscale
-
-    hscale = x
 
 def HSVmap():
     hsvmap = np.zeros((180, 256, 3), np.uint8)
@@ -36,22 +28,7 @@ def hist2D(filename):
     hist = cv2.calcHist([hsv],[0],None,[180],[0,180])
     
     histogram.save(filename+'.histogram',hist)
-    return hist
-    
 
 
-def compareWith(masterpieceName,userHist):
-    img1=histogram.load(masterpieceName)
-    return compareHIst.compareImg(img1,userHist)
-
-
-def findNearestImg(fileName):
-    hist=hist2D(fileName)
-    max=0
-    maxIndex=0
-    for x in range(1,1):
-        tmp = compareWith(x+'.jpg',hist)
-        if (tmp>max):
-            max=tmp
-            maxIndex=x
-    return maxIndex
+for x in range(1,30):
+    hist2D(x+'.jpg')
