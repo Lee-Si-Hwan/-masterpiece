@@ -1,7 +1,7 @@
    
 import cv2, numpy as np
 import matplotlib.pylab as plt
-from remove_noise import *
+from noiseRemover import *
 import histogram
 
 def HSVmap():

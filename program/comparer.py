@@ -1,9 +1,9 @@
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
-from remove_noise import *
+from noiseRemover import *
 import histogram
-import compareHIst
+import compareHist
 
 hscale = 0
 
@@ -42,7 +42,7 @@ def hist2D(filename):
 
 def compareWith(masterpieceName,userHist):
     img1=histogram.load(masterpieceName+'.histogram')
-    return compareHIst.compareImg(img1,userHist)
+    return compareHist.compareImg(img1,userHist)
 
 
 def findNearestImg(fileName):
