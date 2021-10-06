@@ -31,4 +31,4 @@ def hist2D(filename):
 
 
 for x in range(1,30):
-    hist2D(x+'.jpg')
+    hist2D(str(x)+'.jpg')
