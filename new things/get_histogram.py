@@ -2,6 +2,8 @@ import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 from remove_noise import *
+import histogram
+import compareHIst
 
 hscale = 0
 
@@ -31,12 +33,26 @@ def hist2D(filename):
 
     hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
 
-    hist = cv2.calcHist([hsv],[0,1],None,[180,256],[0,180,0,256])
-    hist = np.clip(hist*0.005*scale,0,1)
-    hist = hsvmap*hist[:,:,np.newaxis] / 255.0
-
-    cv2.imshow('hist2D',hist)
-    cv2.waitKey(0)
+    hist = cv2.calcHist([hsv],[0],None,[180],[0,180])
     
-k=input()
-hist2D('../img/'+k)
+    histogram.save(filename+'.histogram',hist)
+    return hist
+    
+
+
+def compareWith(masterpieceName,userHist):
+    img1=histogram.load(masterpieceName+'.histogram')
+    return compareHIst.compareImg(img1,userHist)
+
+
+def findNearestImg(fileName):
+    hist=hist2D(fileName)
+    max=0
+    maxIndex=0
+    for x in range(1,14):
+        tmp = compareWith('data/'+x+'.jpg',hist)
+        if (tmp>max):
+            max=tmp
+            maxIndex=x
+    return maxIndex
+
