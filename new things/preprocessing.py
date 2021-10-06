@@ -18,17 +18,24 @@ def HSVmap():
 scale=1
 def hist2D(filename):
     img = cv2.imread(filename)
-    print("denoising...")
+    if img is None:
+        print("img load error : "+filename)
+        return
+    print('\tdenoising...')
     img=denoise(img, 30)
-    print("denoising...finished")
-    hsvmap = HSVmap()
-
+    print("\tdenoising finished")
     hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
 
     hist = cv2.calcHist([hsv],[0],None,[180],[0,180])
-    
     histogram.save('result/'+filename+'.histogram',hist)
+    
+try:
 
+    for x in range(1,38):
+        print(str(x)+' : processing started...')
+        hist2D('data/'+str(x)+'.jpg')
 
-for x in range(1,30):
-    hist2D(str(x)+'.jpg')
+        print('\tfinished processing '+str(x))
+except:
+    print("something is wierd.")
+    input()

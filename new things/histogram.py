@@ -1,8 +1,12 @@
+import pickle
 def save(filename,hist):
+    print('saving ...')
+    print("hi "+filename)
     with open(filename,'wb') as file:
-        file.write(bytes(hist))
+        pickle.dump(hist, file, pickle.HIGHEST_PROTOCOL)
+    print("saved!")
 def load(filename):
     hist=None
     with open(filename,'rb') as file:
-        hist=file.read()
+        hist=pickle.load(file)
     return hist
