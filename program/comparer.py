@@ -25,24 +25,26 @@ def HSVmap():
     return hsvmap
 scale=1
 def hist2D(filename):
+    print("PROCESSING  "+filename)
     img = cv2.imread(filename)
     print("denoising...")
     img=denoise(img, 30)
     print("denoising...finished")
+    cv2.imshow("denoised image",img)
     hsvmap = HSVmap()
 
     hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
 
     hist = cv2.calcHist([hsv],[0],None,[180],[0,180])
     
-    histogram.save(filename+'.histogram',hist)
+    #histogram.save(filename+'.histogram',hist)
     return hist
     
 
 
 def compareWith(masterpieceName,userHist):
-    img1=histogram.load(masterpieceName+'.histogram')
-    return compareHist.compareImg(img1,userHist)
+    hist=histogram.load(masterpieceName+'.histogram')
+    return compareHist.compareImg(hist,userHist)
 
 
 def findNearestImg(fileName):
