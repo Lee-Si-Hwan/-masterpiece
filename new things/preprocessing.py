@@ -27,7 +27,7 @@ def hist2D(filename):
 
     hist = cv2.calcHist([hsv],[0],None,[180],[0,180])
     
-    histogram.save(filename+'.histogram',hist)
+    histogram.save('result/'+filename+'.histogram',hist)
 
 
 for x in range(1,30):
