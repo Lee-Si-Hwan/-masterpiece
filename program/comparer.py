@@ -49,7 +49,7 @@ def findNearestImg(fileName):
     hist=hist2D(fileName)
     max=0
     maxIndex=0
-    for x in range(1,14):
+    for x in range(1,38):
         tmp = compareWith('data/'+x+'.jpg',hist)
         if (tmp>max):
             max=tmp
