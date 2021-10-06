@@ -41,8 +41,8 @@ def hist2D(filename):
 
 
 def compareWith(masterpieceName,userHist):
-    img1=histogram.load(masterpieceName+'.histogram')
-    return compareHist.compareImg(img1,userHist)
+    hist=histogram.load(masterpieceName+'.histogram')
+    return compareHist.compareImg(hist,userHist)
 
 
 def findNearestImg(fileName):

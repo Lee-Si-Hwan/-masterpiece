@@ -27,13 +27,13 @@ def hist2D(filename):
     hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
 
     hist = cv2.calcHist([hsv],[0],None,[180],[0,180])
-    histogram.save('result/'+filename+'.histogram',hist)
+    histogram.save(''+filename+'.histogram',hist)
     
 try:
 
-    for x in range(1,38):
+    for x in range(38,39):
         print(str(x)+' : processing started...')
-        hist2D('data/'+str(x)+'.jpg')
+        hist2D('Dataset/data/'+str(x)+'.jpg')
 
         print('\tfinished processing '+str(x))
 except:
