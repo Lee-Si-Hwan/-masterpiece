@@ -139,7 +139,7 @@ def findNearest(filepath):
         dataSet.append(data)
         #drawHist(res, temp)
     result = predictiveModel(filepath, dataSet)
-    result = sorted(result, reverse = True)
+    result = sorted(result, reverse = True, key = lambda x : (x[0], -x[1]))
     #print(result)
     
     
@@ -151,7 +151,16 @@ def findNearest(filepath):
        
     except Exception as e:
         print(e)
-    return (result[0][2])
+    return (result)
+
+def drawResult(data):
+    fig = plt.figure()
+    for i in range(9):
+        img = cv2.imread(f"Dataset/data/{data[i][2]}.jpg")
+        ax = fig.add_subplot(1, 9, i+1)
+        ax.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+        ax.set_xticks([]), ax.set_yticks([])
+    plt.show()
 #################################
     
     # test_hist = makeHist("test7.png")

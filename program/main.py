@@ -12,9 +12,10 @@ if __name__ == "__main__":
     print("Hello world!")
     filename = tkinter.filedialog.askopenfilename(initialdir=".",title="Choose image file",filetypes=[("Image File","*.png *.jpg *.jpeg *.jpe *.bmp *.dib *.pbm *.pgm *.ppm *.sr *.ras *.tiff *.tif")])
     nearest=None
-    nearest = model.findNearest(filename)
-    print(nearest)
-    filename = f'Dataset/info/{nearest}.txt'
+    data = model.findNearest(filename)
+    print()
+    model.drawResult(data)
+    filename = f'Dataset/info/{data[0][2]}.txt'
     try:
         with open(filename, encoding='utf-8') as desc:
             name = desc.readline()
