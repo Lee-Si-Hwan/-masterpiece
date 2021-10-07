@@ -101,9 +101,9 @@ def predictiveModel(testTitle, dataSet):
     for data in dataSet: #데이터 셋 중에서 한 명화 데이터
         sumAll=0
         j=0
+        temp = 0
         for chunk in data:
             l = 0
-            temp = 0
             flag = [0,0,0,0]
             userChunk = test_data[j]
             for t in range(len(userChunk)): #내 그림의 한 대푯값
@@ -118,7 +118,7 @@ def predictiveModel(testTitle, dataSet):
             j+=1
         avgAll = sumAll/9
         result.append([temp, avgAll, i])
-
+        print("temp:",temp)
 
         i+=1
 
@@ -142,7 +142,7 @@ def findNearest(filepath):
     result = sorted(result, reverse = True)
     #print(result)
 
-    top = result[0][0] #3
+    top = result[0][0] 
     real_res = list()
     i = 0
     while result[i][0] == top:
@@ -151,8 +151,12 @@ def findNearest(filepath):
     
     try:
         print("답: ",real_res[len(real_res)-1][2])
-        print(', ',real_res[len(real_res)-2][2])
+        print(', ', real_res[len(real_res)-2][2])
         print(', ', real_res[len(real_res)-3][2])
+        print(', ', real_res[len(real_res)-4][2])
+        print(', ', real_res[len(real_res)-5][2])
+        print(', ', real_res[len(real_res)-6][2])
+        print(', ', real_res[len(real_res)-7][2])
     except Exception as e:
         print(e)
     return (real_res[len(real_res)-1][2])
