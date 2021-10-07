@@ -141,25 +141,17 @@ def findNearest(filepath):
     result = predictiveModel(filepath, dataSet)
     result = sorted(result, reverse = True)
     #print(result)
-
-    top = result[0][0] 
-    real_res = list()
-    i = 0
-    while result[i][0] == top:
-        real_res.append(result[i])
-        i+=1
+    
     
     try:
-        print("답: ",real_res[len(real_res)-1][2])
-        print(', ', real_res[len(real_res)-2][2])
-        print(', ', real_res[len(real_res)-3][2])
-        print(', ', real_res[len(real_res)-4][2])
-        print(', ', real_res[len(real_res)-5][2])
-        print(', ', real_res[len(real_res)-6][2])
-        print(', ', real_res[len(real_res)-7][2])
+        for i in range(10):
+            print("answer:")
+            print(', ', result[i][2])
+
+       
     except Exception as e:
         print(e)
-    return (real_res[len(real_res)-1][2])
+    return (result[0][2])
 #################################
     
     # test_hist = makeHist("test7.png")
