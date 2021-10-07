@@ -6,7 +6,7 @@ description=None
 
 root = tkinter.Tk()
 root.title("Masterpiece")
-root.geometry("1000x600+10+10")
+root.geometry("700x100+10+10")
 
 if __name__ == "__main__":
     print("Hello world!")
@@ -30,14 +30,14 @@ if __name__ == "__main__":
     nameLabel.place(x=20,y=10)
     descLabel.place(x=20, y=40)
 
-    originalImage = tkinter.PhotoImage(file=f"Dataset/data/{nearest}.jpg")
-    userImage = tkinter.PhotoImage(file=filename)
+    # originalImage = tkinter.PhotoImage(file=f"Dataset/data/{nearest}.jpg")
+    # userImage = tkinter.PhotoImage(file=filename)
 
-    imgLabel1 = tkinter.Label(root, image=originalImage)
-    imgLabel2 = tkinter.Label(root, image=userImage)
+    # imgLabel1 = tkinter.Label(root, image=originalImage)
+    # imgLabel2 = tkinter.Label(root, image=userImage)
 
-    imgLabel1.place(x=10, y=50)
-    imgLabel2.place(x=500, y=50)
+    # imgLabel1.place(x=10, y=50)
+    # imgLabel2.place(x=500, y=50)
 
 
 root.mainloop()
