@@ -5,6 +5,7 @@ def save(filename,hist):
     with open(filename,'wb') as file:
         pickle.dump(hist, file, pickle.HIGHEST_PROTOCOL)
     print("saved!")
+
 def load(filename):
     hist=None
     with open(filename,'rb') as file:

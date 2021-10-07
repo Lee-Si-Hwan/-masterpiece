@@ -11,7 +11,18 @@ def getHist(title):
 def makeHist(title):
     img = cv2.imread(title)
     img = cv2.cvtColor(img, cv2.COLOR_HSV2BGR)
-    hist = cv2.calcHist([img], [0,1], None, [180, 256], [0, 180, 0, 256])
+
+    hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
+
+    print(len(hsv[0]),len(hsv))
+    width=len(hsv[0])
+    height=len(hsv)
+    hist=list()
+    for i in range(1,4):
+        for j in range(1,4):
+            cutHsv = hsv[int((i-1)*height/3) : int(i*height/3) , int((j-1)*width/3) : int(j*width/3) ]
+            
+            hist.append(cv2.calcHist([cutHsv],[0],None,[180],[0,180]))
 
     return hist
 
@@ -75,25 +86,34 @@ def normalize(data): #정규화 함수
 def predictiveModel(testTitle, dataSet):
     test_hist = makeHist(testTitle)
     
-    test_res = getSumlist(test_hist)
+    test_data=list()
+    for i in range(1,10):
+        test_res = getSumlist(test_hist[i])
 
-    test_data = findTop(test_res, 10, 4)
-    
+        test_data.append(findTop(test_res, 10, 4))
+
     result = list()
     i = 1
     for data in dataSet: #데이터 셋 중에서 한 명화 데이터
+        sumAll=0
+        j=1
         for chunk in data:
-            temp = 0
             l = 0
+            temp = 0
             flag = [0,0,0,0]
-            for t in range(len(test_data)): #내 그림의 한 대푯값
+            userChunk = test_data[j]
+            for t in range(len(userChunk)): #내 그림의 한 대푯값
                 for d in range(len(data)): #한 명화 데이터의 한 대푯값
-                    if test_data[t][0] > data[d][0] - 12 and test_data[t][0] < data[d][0] + 12 and flag[t] == 0: #해당 명화의 한 대표값을 기준으로 +- 10 범위 안에 드는가
+                    if userChunk[t][0] > data[d][0] - 12 and userChunk[t][0] < data[d][0] + 12 and flag[t] == 0: #해당 명화의 한 대표값을 기준으로 +- 10 범위 안에 드는가
                         temp += 1
                         flag[t] = 1
-                        l += (test_data[t][1]- data[d][1])**2
-            l += math.sqrt(l/(temp+1))
-        result.append([temp, l, i])
+                        l += (userChunk[t][1]- data[d][1])**2
+            l = math.sqrt(l/(temp+1))
+            sumAll+=l
+
+            j+=1
+        avgAll = sumAll/9
+        result.append([temp, avgAll, i])
 
 
         i+=1
@@ -107,7 +127,7 @@ def findNearest(filepath):
     for i in range(1, 39):
         data=list()
         for j in range(1,10):
-            hist = getHist(f"Dataset/compare/{i}-{j}.jpg.histogram")
+            hist = getHist(f"Dataset/compare/{i}-{j}.histogram")
             res = getSumlist(hist)
             
             temp = findTop(res, 10, 4)
