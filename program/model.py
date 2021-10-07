@@ -3,15 +3,18 @@ import numpy as np
 from matplotlib import pyplot as plt
 import histogram
 import math
-
 def getHist(title):
     hist = histogram.load(title)
     return hist
 
 def makeHist(title):
-    img = cv2.imread(title)
-    img = cv2.cvtColor(img, cv2.COLOR_HSV2BGR)
-
+    print(title)
+    img_array = np.fromfile(title, np.uint8)
+    img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
+    # img = cv2.imread(title)
+    #img = cv2.cvtColor(img, cv2.COLOR_HSV2BGR)
+    if img is None:
+        print("image not found")
     hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
 
     print(len(hsv[0]),len(hsv))
@@ -23,7 +26,7 @@ def makeHist(title):
             cutHsv = hsv[int((i-1)*height/3) : int(i*height/3) , int((j-1)*width/3) : int(j*width/3) ]
             
             hist.append(cv2.calcHist([cutHsv],[0],None,[180],[0,180]))
-
+    print(len(hist))
     return hist
 
 def getSumlist(hist):
@@ -85,10 +88,11 @@ def normalize(data): #정규화 함수
 
 def predictiveModel(testTitle, dataSet):
     test_hist = makeHist(testTitle)
-    
+    print(len(test_hist))
     test_data=list()
-    for i in range(1,10):
-        test_res = getSumlist(test_hist[i])
+    for asdf in range(0,9):
+        print(asdf)
+        test_res = getSumlist(test_hist[asdf])
 
         test_data.append(findTop(test_res, 10, 4))
 
@@ -96,18 +100,18 @@ def predictiveModel(testTitle, dataSet):
     i = 1
     for data in dataSet: #데이터 셋 중에서 한 명화 데이터
         sumAll=0
-        j=1
+        j=0
         for chunk in data:
             l = 0
             temp = 0
             flag = [0,0,0,0]
             userChunk = test_data[j]
             for t in range(len(userChunk)): #내 그림의 한 대푯값
-                for d in range(len(data)): #한 명화 데이터의 한 대푯값
-                    if userChunk[t][0] > data[d][0] - 12 and userChunk[t][0] < data[d][0] + 12 and flag[t] == 0: #해당 명화의 한 대표값을 기준으로 +- 10 범위 안에 드는가
+                for d in range(len(chunk)): #한 명화 데이터의 한 대푯값
+                    if userChunk[t][0] > chunk[d][0] - 12 and userChunk[t][0] < chunk[d][0] + 12 and flag[t] == 0: #해당 명화의 한 대표값을 기준으로 +- 10 범위 안에 드는가
                         temp += 1
                         flag[t] = 1
-                        l += (userChunk[t][1]- data[d][1])**2
+                        l += (userChunk[t][1]- chunk[d][1])**2
             l = math.sqrt(l/(temp+1))
             sumAll+=l
 
@@ -136,7 +140,7 @@ def findNearest(filepath):
         #drawHist(res, temp)
     result = predictiveModel(filepath, dataSet)
     result = sorted(result, reverse = True)
-    print(result)
+    #print(result)
 
     top = result[0][0] #3
     real_res = list()
@@ -144,8 +148,12 @@ def findNearest(filepath):
     while result[i][0] == top:
         real_res.append(result[i])
         i+=1
-    print("답: ",real_res[len(real_res)-1][2], real_res[len(real_res)-2][2], real_res[len(real_res)-3][2])
-    return (real_res[len(real_res)-1][2], real_res[len(real_res)-2][2], real_res[len(real_res)-3][2])
+    
+    try:
+        print("답: ",real_res[len(real_res)-1][2], real_res[len(real_res)-2][2], real_res[len(real_res)-3][2])
+    except Exception as e:
+        print(e)
+    return (real_res[len(real_res)-1][2])
 #################################
     
     # test_hist = makeHist("test7.png")
