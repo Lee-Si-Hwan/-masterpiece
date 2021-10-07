@@ -150,7 +150,9 @@ def findNearest(filepath):
         i+=1
     
     try:
-        print("답: ",real_res[len(real_res)-1][2], real_res[len(real_res)-2][2], real_res[len(real_res)-3][2])
+        print("답: ",real_res[len(real_res)-1][2])
+        print(', ',real_res[len(real_res)-2][2])
+        print(', ', real_res[len(real_res)-3][2])
     except Exception as e:
         print(e)
     return (real_res[len(real_res)-1][2])
