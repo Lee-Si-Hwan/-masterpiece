@@ -11,6 +11,8 @@ def makeHist(title):
     print(title)
     img_array = np.fromfile(title, np.uint8)
     img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
+
+    img = cv2.resize(img,(1000,1000),interpolation=cv2.INTER_LINEAR)
     # img = cv2.imread(title)
     #img = cv2.cvtColor(img, cv2.COLOR_HSV2BGR)
     if img is None:
