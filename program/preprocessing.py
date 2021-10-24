@@ -44,7 +44,7 @@ def hist2D(filenamea):
     
 try:
 
-    for x in range(1,39):
+    for x in range(37,38):
         print(str(x)+' : processing started...')
         hist2D(x)
 
