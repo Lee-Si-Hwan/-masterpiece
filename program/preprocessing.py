@@ -6,6 +6,9 @@ import histogram
 
 
 scale=1
+def normalizePicture(image):
+    return cv2.resize(image,dsize=(1000,1000),interpolation=cv2.INTER_LINEAR)
+
 def hist2D(filenamea):
     filename='Dataset/data/'+str(filenamea)+'.jpg'
     img = cv2.imread(filename)
@@ -13,6 +16,8 @@ def hist2D(filenamea):
         print("img load error : "+filename)
         return
     print('\tdenoising...')
+    img=normalizePicture(img)
+    
     img=denoise(img, 30)
     print("\tdenoising finished")
 
@@ -48,3 +53,4 @@ except Exception as e:
     print("something is wierd.")
     print(e)
     input()
+input()
