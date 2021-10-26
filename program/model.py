@@ -111,7 +111,7 @@ def predictiveModel(testTitle, dataSet):
             for t in range(len(userChunk)): #내 그림의 한 대푯값
                 for d in range(len(chunk)): #한 명화 데이터의 한 대푯값
                     if userChunk[t][0] > chunk[d][0] - 12 and userChunk[t][0] < chunk[d][0] + 12 and flag[t] == 0: #해당 명화의 한 대표값을 기준으로 +- 10 범위 안에 드는가
-                        if userChunk[t][1] > chunk[d][1] - 12 and userChunk[t][1] < chunk[d][1]:
+                        if userChunk[t][1] > chunk[d][1] - 10000 and userChunk[t][1] < chunk[d][1] + 10000:
                             temp += 1
                             flag[t] = 1
                             l += (userChunk[t][1]- chunk[d][1])**2
