@@ -104,13 +104,15 @@ def predictiveModel(testTitle, dataSet):
         sumAll=0
         j=0
         temp = 0
+        chunk_len = 0 #한 명화 데이터의 대푯값 총 개수
         for chunk in data:
             l = 0
             flag = [0,0,0,0]
             userChunk = test_data[j]
             for t in range(len(userChunk)): #내 그림의 한 대푯값
                 for d in range(len(chunk)): #한 명화 데이터의 한 대푯값
-                    if userChunk[t][0] > chunk[d][0] - 12 and userChunk[t][0] < chunk[d][0] + 12 and flag[t] == 0: #해당 명화의 한 대표값을 기준으로 +- 10 범위 안에 드는가
+                    chunk_len += 1#대푯값 개수 더하기
+                    if userChunk[t][0] > chunk[d][0] - 10 and userChunk[t][0] < chunk[d][0] + 10 and flag[t] == 0: #해당 명화의 한 대표값을 기준으로 +- 10 범위 안에 드는가
                         if userChunk[t][1] > chunk[d][1] - 10000 and userChunk[t][1] < chunk[d][1] + 10000:
                             temp += 1
                             flag[t] = 1
@@ -120,8 +122,8 @@ def predictiveModel(testTitle, dataSet):
 
             j+=1
         avgAll = sumAll/9
-        result.append([temp, avgAll, i])
-        print("temp:",temp)
+        result.append([temp/chunk_len, avgAll, i])######333
+        print("temp:",temp/chunk_len)
 
         i+=1
 
