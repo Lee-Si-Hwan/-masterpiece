@@ -122,6 +122,7 @@ class Main:
         self.yearInfo.config(text=self.informations[k][2])
         try: 
             self.canvas.get_tk_widget().destroy()
+            self.toolbar.destroy()
         except:
             pass
         fig = model.makeComparingHist(self.test_hist,k)
@@ -129,12 +130,12 @@ class Main:
         self.canvas = FigureCanvasTkAgg(fig, master=self.graphFrame)
         self.canvas.draw()
 
-        toolbar = VerticalNavigationToolbar2Tk(self.canvas, self.graphFrame)
-        toolbar.update()
+        self.toolbar = VerticalNavigationToolbar2Tk(self.canvas, self.graphFrame)
+        self.toolbar.update()
         
         self.canvas.mpl_connect("key_press_event", key_press_handler)
         self.canvas.get_tk_widget().pack(side=tkinter.RIGHT, fill=tkinter.BOTH,expand=1)
-        toolbar.pack(side=tkinter.LEFT,fill=tkinter.Y)
+        self.toolbar.pack(side=tkinter.LEFT,fill=tkinter.Y)
 
     def testModel(self):
         for widget in self.listFrame.winfo_children():
