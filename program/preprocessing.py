@@ -1,16 +1,17 @@
-   
 import cv2, numpy as np
 import matplotlib.pylab as plt
 from noiseRemover import *
 import histogram
+import os
 
+nowDir = os.path.dirname(__file__)
 
 scale=1
 def normalizePicture(image):
     return cv2.resize(image,dsize=(1000,1000),interpolation=cv2.INTER_LINEAR)
 
 def hist2D(filenamea):
-    filename='Dataset/data/'+str(filenamea)+'.jpg'
+    filename=os.path.join(nowDir,'Dataset/data/'+str(filenamea)+'.jpg')
     img = cv2.imread(filename)
     if img is None:
         print("img load error : "+filename)
@@ -28,29 +29,28 @@ def hist2D(filenamea):
     width=len(hsv[0])
     height=len(hsv)
 
+    hist = list()
+    
     for i in range(1,4):
         for j in range(1,4):
             cutHsv = hsv[int((i-1)*height/3) : int(i*height/3) , int((j-1)*width/3) : int(j*width/3) ]
-            
-            hist = cv2.calcHist([cutHsv],[0],None,[180],[0,180])
+            hist.append(cv2.calcHist([cutHsv],[0],None,[180],[0,180]))
             # plt.plot(hist)
             # plt.title(f'Dataset/compare/{filenamea}-{i*3+j-3}.histogram')
             # plt.show()
-            histogram.save(f'Dataset/compare/{filenamea}-{i*3+j-3}.histogram',hist)
             
-
+    histogram.save(os.path.join(nowDir,f'Dataset/compare/{filenamea}.histogram'),hist)
     #plt.plot(hist)
     #plt.show()
     
-try:
 
-    for x in range(37,38):
-        print(str(x)+' : processing started...')
-        hist2D(x)
+for x in range(1,38):
+    print(str(x)+' : processing started...')
+    hist2D(x)
 
-        print('\tfinished processing '+str(x))
-except Exception as e:
-    print("something is wierd.")
-    print(e)
-    input()
+    print('\tfinished processing '+str(x))
+
+    # print("something is wierd.")
+    # print(e)
+    # input()
 input()

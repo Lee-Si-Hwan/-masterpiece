@@ -4,24 +4,18 @@ from matplotlib import pyplot as plt
 import histogram
 import math
 import os
-datasetDir = os.path.join(os.path.dirname(__file__),'Dataset')
 
-def getHist(title):
-    hist = histogram.load(title)
-    return hist
+nowDir = os.path.dirname(__file__)
+datasetDir = os.path.join(nowDir,'Dataset')
 
 def makeHist(title):
-    print(title)
     img_array = np.fromfile(title, np.uint8)
     img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
-
     img = cv2.resize(img,(1000,1000),interpolation=cv2.INTER_LINEAR)
-    # img = cv2.imread(title)
-    #img = cv2.cvtColor(img, cv2.COLOR_HSV2BGR)
     if img is None:
         print("image not found")
+        return None
     hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
-
     print(len(hsv[0]),len(hsv))
     width=len(hsv[0])
     height=len(hsv)
@@ -29,10 +23,23 @@ def makeHist(title):
     for i in range(1,4):
         for j in range(1,4):
             cutHsv = hsv[int((i-1)*height/3) : int(i*height/3) , int((j-1)*width/3) : int(j*width/3) ]
-            
+            #cv2.imshow(f'{i},{j} Image',cutHsv)
             hist.append(cv2.calcHist([cutHsv],[0],None,[180],[0,180]))
+
     print(len(hist))
     return hist
+
+def makeComparingHist(data,to_compare):
+    fig = plt.figure()
+    
+    hist = histogram.load(os.path.join(nowDir,f'Dataset/compare/{to_compare}.histogram'))
+    for x in range(1,10):
+        subplot = fig.add_subplot(3,3,x)
+        # remove legend of subplot
+        subplot.legend_ = None
+        subplot.plot(hist[x-1],color="g", label="masterpiece")
+        subplot.plot(data[x-1],color="b", label="user")
+    return fig
 
 def getSumlist(hist):
     result = list()
@@ -40,28 +47,14 @@ def getSumlist(hist):
         result.append(sum(i))
     return result
 
-def drawHist(data, D, test):
-    #data = cv2.normalize(data, None, 0, 180, cv2.NORM_INF)
-    plt.plot(data)
 
-    
-    # for i in D:
-    #     plt.scatter(i[0], i[1], c = "g")
-
-    # for i in test:
-    #     plt.scatter(i[0], i[1], c = "r")
-    
-    plt.show()
-    
-    
 def findTop(data, length, num): #사진의 대푯값 찾기
-    top = sorted(data, reverse = True) #정렬
+    top = sorted(data, reverse = True)
     D = list()
     i = 0
     while len(D)< num:
         what = True
         t = data.index(top[i])
-        #print(t)
         
         for j in range(1, length):
             if t+j < 180:
@@ -93,7 +86,6 @@ def normalize(data): #정규화 함수
 
 def predictiveModel(testTitle, dataSet):
     test_hist = makeHist(testTitle)
-    #print(len(test_hist))
     test_data=list()
     for asdf in range(0,9):
         test_res = getSumlist(test_hist[asdf])
@@ -124,37 +116,33 @@ def predictiveModel(testTitle, dataSet):
             j+=1
         avgAll = sumAll/9
         result.append([temp/chunk_len, avgAll, i])######333
-        #print("temp:",temp/chunk_len)
 
         i+=1
 
-    #print(result)
-    return result
+    return result, test_hist
     
 
 def findNearest(filepath):
     dataSet = list()
-    for i in range(1, 39):
+    for i in range(1, 38):
         data=list()
-        for j in range(1,10):
-            hist = getHist(os.path.join(datasetDir,f"compare/{i}-{j}.histogram"))
-            res = getSumlist(hist)
+        hist = histogram.load(os.path.join(datasetDir,f"compare/{i}.histogram"))
+        for j in range(9):
+            res = getSumlist(hist[j])
             
             temp = findTop(res, 10, 4)
             data.append(temp)
         dataSet.append(data)
-        #drawHist(res, temp)
-    result = predictiveModel(filepath, dataSet)
+    result, test_hist = predictiveModel(filepath, dataSet)
     result = sorted(result, reverse = True, key = lambda x : (x[0], -x[1]))
-    print(result)
     
     try:
-        print("answer:")
+        to_print="Answer : "
         for i in range(10):
-            print(', ', result[i][2])
+            to_print+=str(result[i][2])+', '
     except Exception as e:
         print(e)
-    return (result)
+    return result, test_hist
 
 def drawResult(data):
     fig = plt.figure()
@@ -164,18 +152,3 @@ def drawResult(data):
         ax.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
         ax.set_xticks([]), ax.set_yticks([])
     return fig
-    #plt.show()
-
-#################################
-    
-    # test_hist = makeHist("test7.png")
-    # test_res = getSumlist(test_hist)
-    # test_data = findTop(test_res, 6, 4)
-    
-    # hist = getHist("Dataset/compare/17.jpg.histogram")
-    # res = getSumlist(hist)
-    
-    
-    # drawHist(res, normalize(dataSet[16]), normalize(test_data))
-
-

@@ -1,7 +1,6 @@
 import pickle
 def save(filename,hist):
     print('saving ...')
-    print("hi "+filename)
     with open(filename,'wb') as file:
         pickle.dump(hist, file, pickle.HIGHEST_PROTOCOL)
     print("saved!")
