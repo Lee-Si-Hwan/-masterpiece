@@ -3,6 +3,9 @@ import numpy as np
 from matplotlib import pyplot as plt
 import histogram
 import math
+import os
+datasetDir = os.path.join(os.path.dirname(__file__),'Dataset')
+
 def getHist(title):
     hist = histogram.load(title)
     return hist
@@ -90,12 +93,10 @@ def normalize(data): #정규화 함수
 
 def predictiveModel(testTitle, dataSet):
     test_hist = makeHist(testTitle)
-    print(len(test_hist))
+    #print(len(test_hist))
     test_data=list()
     for asdf in range(0,9):
-        print(asdf)
         test_res = getSumlist(test_hist[asdf])
-
         test_data.append(findTop(test_res, 10, 4))
 
     result = list()
@@ -123,7 +124,7 @@ def predictiveModel(testTitle, dataSet):
             j+=1
         avgAll = sumAll/9
         result.append([temp/chunk_len, avgAll, i])######333
-        print("temp:",temp/chunk_len)
+        #print("temp:",temp/chunk_len)
 
         i+=1
 
@@ -136,7 +137,7 @@ def findNearest(filepath):
     for i in range(1, 39):
         data=list()
         for j in range(1,10):
-            hist = getHist(f"Dataset/compare/{i}-{j}.histogram")
+            hist = getHist(os.path.join(datasetDir,f"compare/{i}-{j}.histogram"))
             res = getSumlist(hist)
             
             temp = findTop(res, 10, 4)
@@ -145,15 +146,12 @@ def findNearest(filepath):
         #drawHist(res, temp)
     result = predictiveModel(filepath, dataSet)
     result = sorted(result, reverse = True, key = lambda x : (x[0], -x[1]))
-    #print(result)
-    
+    print(result)
     
     try:
+        print("answer:")
         for i in range(10):
-            print("answer:")
             print(', ', result[i][2])
-
-       
     except Exception as e:
         print(e)
     return (result)
@@ -161,11 +159,13 @@ def findNearest(filepath):
 def drawResult(data):
     fig = plt.figure()
     for i in range(9):
-        img = cv2.imread(f"Dataset/data/{data[i][2]}.jpg")
+        img = cv2.imread(os.path.join(datasetDir,f"data/{data[i][2]}.jpg"))
         ax = fig.add_subplot(1, 9, i+1)
         ax.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
         ax.set_xticks([]), ax.set_yticks([])
-    plt.show()
+    return fig
+    #plt.show()
+
 #################################
     
     # test_hist = makeHist("test7.png")
