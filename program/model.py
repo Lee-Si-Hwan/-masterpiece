@@ -63,6 +63,9 @@ def extractValidRange(histogram, ratio = 0.9, error = 0.01):
             cutline += temp
         else:
             cutline -= temp
+    plt.plot(histogram)
+    plt.plot([cutline for x in range(len(histogram)) if True])
+    plt.show()
     return cutline
 
             
@@ -90,22 +93,22 @@ def ensemble(a, b, c):
 # return rank list
 def predict(hist_H, hist_S, hist_V):
 
-    for i in range(9):
-        validRange_H = extractValidRange(hist_H[i])
-        validRange_S = extractValidRange(hist_S[i])
-        validRange_V = extractValidRange(hist_V[i])
-
-        rank = list()
+    rank = list()
+    for index, masterpiece in enumerate(get_masterpieces()):
         similarity_H=list()
         similarity_S=list()
         similarity_V=list()
+        for i in range(9):
+            validRange_H = extractValidRange(hist_H[i])
+            validRange_S = extractValidRange(hist_S[i])
+            validRange_V = extractValidRange(hist_V[i])
 
-        for index, masterpiece in enumerate(get_masterpieces()):
+
             similarity_H.append(calculate_similarity(hist_H[i], validRange_H, masterpiece['histogram'][0][i], masterpiece['validrange'][0][i]))
             similarity_S.append(calculate_similarity(hist_S[i], validRange_S, masterpiece['histogram'][1][i], masterpiece['validrange'][1][i]))
             similarity_V.append(calculate_similarity(hist_V[i], validRange_V, masterpiece['histogram'][2][i], masterpiece['validrange'][2][i]))
-    similarity = ensemble(similarity_H, similarity_S, similarity_V)
-    rank.append([index, similarity])
+        similarity = ensemble(similarity_H, similarity_S, similarity_V)
+        rank.append([index, similarity])
     rank.sort(key=lambda x:x[1], reverse=True)
     return rank
 
