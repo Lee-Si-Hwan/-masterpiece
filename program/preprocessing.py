@@ -3,6 +3,8 @@ import matplotlib.pylab as plt
 from noiseRemover import *
 import histogram
 import os
+import newmodel
+import tqdm
 
 nowDir = os.path.dirname(__file__)
 
@@ -25,32 +27,12 @@ def hist2D(filenamea):
 
     hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
 
-    print(len(hsv[0]),len(hsv))
-    width=len(hsv[0])
-    height=len(hsv)
-
-    hist = list()
     
-    for i in range(1,4):
-        for j in range(1,4):
-            cutHsv = hsv[int((i-1)*height/3) : int(i*height/3) , int((j-1)*width/3) : int(j*width/3) ]
-            hist.append(cv2.calcHist([cutHsv],[0],None,[180],[0,180]))
-            # plt.plot(hist)
-            # plt.title(f'Dataset/compare/{filenamea}-{i*3+j-3}.histogram')
-            # plt.show()
-            
-    histogram.save(os.path.join(nowDir,f'Dataset/compare/{filenamea}.histogram'),hist)
-    #plt.plot(hist)
-    #plt.show()
-    
+def preprocess():
+    for num in tqdm(range(38),desc='preprocessing'):
+        print(str(num)+' : processing started...')
+        image = newmodel.load_image(os.path.join(nowDir,'Dataset/data/'+str(num)+'.jpg'))
+        newmodel.make_histogram()
+        histogram.save(os.path.join(nowDir,f'Dataset/compare/{num}.histogram'),hist)
 
-for x in range(1,38):
-    print(str(x)+' : processing started...')
-    hist2D(x)
-
-    print('\tfinished processing '+str(x))
-
-    # print("something is wierd.")
-    # print(e)
-    # input()
-input()
+        print('\tfinished processing '+str(num))
