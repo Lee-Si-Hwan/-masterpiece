@@ -28,7 +28,6 @@ def load_image(title):
 # Cut and Make Histogram
 def make_histogram(image):
     hsv = cv2.cvtColor(image,cv2.COLOR_BGR2HSV)
-    print(hsv)
     width=len(hsv[0])
     height=len(hsv)
     hist_H = list()
@@ -46,7 +45,6 @@ def make_histogram(image):
 # return as list
 # histogram : np.array()
 def extractValidRange(histogram):
-    
     pass
 
 # return as similarity percent
@@ -61,21 +59,24 @@ def ensemble(a, b, c):
     return (a+b+c)/3
 
 # compare with histogram
+# return rank list
 def predict(hist_H, hist_S, hist_V):
     validRange_H = extractValidRange(hist_H)
     validRange_S = extractValidRange(hist_S)
     validRange_V = extractValidRange(hist_V)
 
-    highest_similarity_index=0
-    highest_similarity=0
+    rank = list()
     for index, masterpiece in enumerate(get_masterpieces_histogram()):
         masterpiece
         similarity_H = calculate_similarity(hist_H, validRange_H, masterpiece[0])
         similarity_S = calculate_similarity(hist_S, validRange_S, masterpiece[1])
         similarity_V = calculate_similarity(hist_V, validRange_V, masterpiece[2])
         similarity = ensemble(similarity_H, similarity_S, similarity_V)
-        if similarity > highest_similarity:
-            highest_similarity = similarity
-            highest_similarity_index = index
-    return highest_similarity_index
+        rank.append([index, similarity])
+    rank.sort(key=lambda x:x[1], reverse=True)
+    return rank
 
+def use_model(title):
+    image = load_image(title)
+    hist_H, hist_S, hist_V = make_histogram(image)
+    return predict(hist_H, hist_S, hist_V)
