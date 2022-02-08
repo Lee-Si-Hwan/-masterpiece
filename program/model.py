@@ -44,11 +44,32 @@ def make_histogram(image):
 
 # return as list
 # histogram : np.array()
-def extractValidRange(histogram):
-    pass
+def extractValidRange(histogram, ratio = 0.9, error = 0.01):
+    area = 0
+    standard = sum(histogram)*ratio
+    cutline = max(histogram)//2
+    temp = max(histogram)//2
 
+    #binary search
+    while abs(area-standard) > standard * error:
+        area = 0
+        temp = temp//2
+        for i in histogram:
+            if i > cutline:
+                area += i-cutline
+            else:
+                    continue
+        if area > standard:
+            cutline += temp
+        else:
+            cutline -= temp
+    return cutline
+        
+    
+            
+            
 # return as similarity percent
-# histogram : np.array(), valid_range: list(), to_compare: np.array() as valid range
+# histogram : np.array(), valid_range: list(), to_compare: np.array(), to_compare_valid_range: list()
 def calculate_similarity(histogram, valid_range, to_compare, to_compare_valid_range):
 
     pass
