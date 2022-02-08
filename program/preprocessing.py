@@ -1,7 +1,7 @@
-from noiseRemover import *
-import histogram
 import os
-import newmodel as model
+from noiseRemover import denoise
+import histogram
+import model
 from tqdm import tqdm
 
 nowDir = os.path.dirname(__file__)
