@@ -11,9 +11,13 @@ nowDir = os.path.dirname(__file__)
 # 'validrange' : list() [validRange_H, validRange_S, validRange_V]
 def makeData(image):
     hist = model.make_histogram(image)
-    validRange_H = model.extractValidRange(hist[0])
-    validRange_S = model.extractValidRange(hist[1])
-    validRange_V = model.extractValidRange(hist[2])
+    validRange_H=list()
+    validRange_S=list()
+    validRange_V=list()
+    for i in range(9):
+        validRange_H.append(model.extractValidRange(hist[0][i]))
+        validRange_S.append(model.extractValidRange(hist[1][i]))
+        validRange_V.append(model.extractValidRange(hist[2][i]))
     return {'histogram':hist, 'validrange':[validRange_H, validRange_S, validRange_V]}
 
 def preprocess():
