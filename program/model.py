@@ -82,23 +82,30 @@ def calculate_similarity(histogram, valid_range, to_compare, to_compare_valid_ra
 
 
 # ensemble all similarity
+# a,b,c = list
 def ensemble(a, b, c):
-    return (a+b+c)/3
+    return (sum(a)+sum(b)+sum(c))/3
 
 # compare with histogram
 # return rank list
 def predict(hist_H, hist_S, hist_V):
-    validRange_H = extractValidRange(hist_H)
-    validRange_S = extractValidRange(hist_S)
-    validRange_V = extractValidRange(hist_V)
 
-    rank = list()
-    for index, masterpiece in enumerate(get_masterpieces()):
-        similarity_H = calculate_similarity(hist_H, validRange_H, masterpiece['histogram'][0], masterpiece['validrange'][0])
-        similarity_S = calculate_similarity(hist_S, validRange_S, masterpiece['histogram'][1], masterpiece['validrange'][1])
-        similarity_V = calculate_similarity(hist_V, validRange_V, masterpiece['histogram'][2], masterpiece['validrange'][2])
-        similarity = ensemble(similarity_H, similarity_S, similarity_V)
-        rank.append([index, similarity])
+    for i in range(9):
+        validRange_H = extractValidRange(hist_H[i])
+        validRange_S = extractValidRange(hist_S[i])
+        validRange_V = extractValidRange(hist_V[i])
+
+        rank = list()
+        similarity_H=list()
+        similarity_S=list()
+        similarity_V=list()
+
+        for index, masterpiece in enumerate(get_masterpieces()):
+            similarity_H.append(calculate_similarity(hist_H[i], validRange_H, masterpiece['histogram'][0][i], masterpiece['validrange'][0][i]))
+            similarity_S.append(calculate_similarity(hist_S[i], validRange_S, masterpiece['histogram'][1][i], masterpiece['validrange'][1][i]))
+            similarity_V.append(calculate_similarity(hist_V[i], validRange_V, masterpiece['histogram'][2][i], masterpiece['validrange'][2][i]))
+    similarity = ensemble(similarity_H, similarity_S, similarity_V)
+    rank.append([index, similarity])
     rank.sort(key=lambda x:x[1], reverse=True)
     return rank
 
