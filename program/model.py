@@ -7,7 +7,7 @@ import histogram
 nowDir = os.path.dirname(__file__)
 
 # return masterpieces histograms as list
-def get_masterpieces_histogram():
+def get_masterpieces():
     masterpiece_num = 38
     masterpieces = list()
     for x in range(masterpiece_num):
@@ -49,7 +49,7 @@ def extractValidRange(histogram):
 
 # return as similarity percent
 # histogram : np.array(), valid_range: list(), to_compare: np.array() as valid range
-def calculate_similarity(histogram, valid_range, to_compare):
+def calculate_similarity(histogram, valid_range, to_compare, to_compare_valid_range):
 
     pass
 
@@ -66,11 +66,10 @@ def predict(hist_H, hist_S, hist_V):
     validRange_V = extractValidRange(hist_V)
 
     rank = list()
-    for index, masterpiece in enumerate(get_masterpieces_histogram()):
-        masterpiece
-        similarity_H = calculate_similarity(hist_H, validRange_H, masterpiece[0])
-        similarity_S = calculate_similarity(hist_S, validRange_S, masterpiece[1])
-        similarity_V = calculate_similarity(hist_V, validRange_V, masterpiece[2])
+    for index, masterpiece in enumerate(get_masterpieces()):
+        similarity_H = calculate_similarity(hist_H, validRange_H, masterpiece['histogram'][0], masterpiece['validrange'][0])
+        similarity_S = calculate_similarity(hist_S, validRange_S, masterpiece['histogram'][1], masterpiece['validrange'][1])
+        similarity_V = calculate_similarity(hist_V, validRange_V, masterpiece['histogram'][2], masterpiece['validrange'][2])
         similarity = ensemble(similarity_H, similarity_S, similarity_V)
         rank.append([index, similarity])
     rank.sort(key=lambda x:x[1], reverse=True)
