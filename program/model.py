@@ -90,8 +90,8 @@ def calculate_similarity(histogram, valid_range, to_compare, to_compare_valid_ra
 
 # ensemble all similarity
 # a,b,c = list
-def ensemble(a, b, c):
-    return (sum(a)+sum(b)+sum(c))/3/9
+def ensemble(h, s, v):
+    return (h+s+v)/3
 
 # compare with histogram
 # return rank list
@@ -116,8 +116,11 @@ def predict(hist_H, hist_S, hist_V):
             similarity_S.append(calculate_similarity(hist_S[chunk], validRange_S[chunk], masterpiece['histogram'][1][chunk], masterpiece['validrange'][1][chunk]))
             similarity_V.append(calculate_similarity(hist_V[chunk], validRange_V[chunk], masterpiece['histogram'][2][chunk], masterpiece['validrange'][2][chunk]))
 
-        similarity = ensemble(similarity_H, similarity_S, similarity_V)
-        rank.append([index, similarity])
+        avg_H = sum(similarity_H)/9
+        avg_S = sum(similarity_S)/9
+        avg_V = sum(similarity_V)/9
+        similarity = ensemble(avg_H, avg_S, avg_V)
+        rank.append([index, similarity, avg_H, avg_S, avg_V])
     rank.sort(key=lambda x:x[1], reverse=True)
     return rank
 

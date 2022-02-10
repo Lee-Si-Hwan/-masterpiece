@@ -118,9 +118,10 @@ class Main:
         self.descInfo.place(x=10, y=20)
         self.yearInfo = ttk.Label(infoFrame, text="")
         self.yearInfo.place(x=10, y=40)
-        self.percentInfo = ttk.Progressbar(infoFrame, orient="horizontal", length=100, mode="determinate")
-        self.percentInfo.place(x=10, y=60)
+        self.percentInfo = ttk.Label(infoFrame)
+        self.percentInfo.place(x=350, y=0)
         
+
         self.graphFrame = ttk.Frame(self.big_frame, width=500, height=400)
         self.graphFrame.place(x=260, y=200)
 
@@ -139,7 +140,7 @@ class Main:
         self.nameInfo.config(text=self.informations[self.rank[rankNumber][0]][0])
         self.descInfo.config(text=self.informations[self.rank[rankNumber][0]][1])
         self.yearInfo.config(text=self.informations[self.rank[rankNumber][0]][2])
-        self.percentInfo.config(value=self.rank[rankNumber][1])
+        self.percentInfo.config(text=f"Hue : {self.rank[rankNumber][2]}%\nSaturation : {self.rank[rankNumber][3]}%\nValue : {self.rank[rankNumber][4]}%")
 
         try:
             self.canvas.get_tk_widget().destroy()
