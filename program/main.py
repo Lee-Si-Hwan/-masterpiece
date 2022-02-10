@@ -116,18 +116,27 @@ class Main:
         query = query.split(' ')
         if query[0]=='Hist':
             if len(query)>=2:
+                index_to_show=None
                 for i in range(len(self.rank)):
-                    if self.rank[i][0] == query[1]:
+                    if self.rank[i][0] == int(query[1]):
                         index_to_show=i
                         break
-                if query[2]=='0':
-                    channel = 0
-                elif query[2]=='1':
-                    channel = 1
-                elif query[2]=='2':
-                    channel = 2
+                if index_to_show is not None:
+                    if len(query)>=3:
+                        if query[2]=='0':
+                            channel = 0
+                        elif query[2]=='1':
+                            channel = 1
+                        elif query[2]=='2':
+                            channel = 2
+                        else:
+                            print("please input valid channel")
+                    else:
+                        channel = 0
                 
-                self.showInformation(index_to_show,channel)
+                    self.showInformation(index_to_show,channel)
+                else:
+                    print('index_to_show is none')
 
             else:
                 print('Please input the index of the image you want to see')
@@ -165,8 +174,8 @@ class Main:
         root_node = self.tree.insert('', 'end', text=testDataFolderAbsPath, open=True)
         self.process_directory(root_node, testDataFolderAbsPath)
 
-        self.debug_input = tkinter.Text(self.big_frame, height=1, width=50)
-        self.debug_input.place(x=10, y=600)
+        self.debug_input = tkinter.Text(self.big_frame, height=1, width=30)
+        self.debug_input.place(x=10, y=630)
         self.debug_input.bind('<Return>', self.on_debug_input_enter)
 
         self.listFrame = ttk.Frame(self.big_frame, width=700, height=90)
@@ -229,7 +238,7 @@ class Main:
         self.rank = model.predict(self.test_hist[0], self.test_hist[1], self.test_hist[2])
         self.images = list()
         for i in range(7):
-            btn = ttk.Button(self.listFrame, text=f"{i+1}", command=lambda k=i: self.showInformation(k))
+            btn = ttk.Button(self.listFrame, text=f"{i+1}", command=lambda k=i: self.showInformation(k,0))
             image = Image.open(os.path.join(nowDir,f"Dataset/data/{self.rank[i][0]}.jpg"))
             image2 = ImageTk.PhotoImage(image.resize((80,80*image.height//image.width)))
             self.images.append(image2)
