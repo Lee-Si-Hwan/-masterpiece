@@ -67,6 +67,8 @@ class VerticalNavigationToolbar2Tk(NavigationToolbar2Tk):
 class Main:
     def openImageBtnDialog(self):
         self.userFilename = tkinter.filedialog.askopenfilename(initialdir=os.path.join(nowDir,'testData'),title="Choose image file",filetypes=[("Image File","*.png *.jpg *.jpeg *.jpe *.bmp *.dib *.pbm *.pgm *.ppm *.sr *.ras *.tiff *.tif")])
+    
+    def updateImage(self):    
         image = Image.open(self.userFilename)
         image = image.resize((150,150*image.height//image.width))
         self.userImageImage=ImageTk.PhotoImage(image)
@@ -85,7 +87,54 @@ class Main:
             subplot.plot(data[channel][x-1],color="b", label="user")
         return fig
     
+    def process_directory(self, parent, path):
+        for p in os.listdir(path):
+            abspath = os.path.join(path, p)
+            isdir = os.path.isdir(abspath)
+            oid = self.tree.insert(parent, 'end', text=p, open=False)
+            if isdir:
+                self.process_directory(oid, abspath)
+    
+    # change self.userFilename to selected one's string
+    def on_tree_select(self,event):
+        item = self.tree.selection()[0]
+        self.userFilename = os.path.join(nowDir,"testData",self.tree.item(item)['text'])
+        self.updateImage()
 
+    def on_tree_double_click(self, event):
+        item = self.tree.selection()[0]
+        self.userFilename = os.path.join(nowDir,"testData",self.tree.item(item)['text'])
+        self.updateImage()
+        self.testModel()
+
+    def on_debug_input_enter(self,event):
+        # get value of self.debug_input
+        query = self.debug_input.get('1.0', tkinter.END)
+        self.debug_input.delete("1.0", tkinter.END)
+
+        #parse query
+        query = query.split(' ')
+        if query[0]=='Hist':
+            if len(query)>=2:
+                for i in range(len(self.rank)):
+                    if self.rank[i][0] == query[1]:
+                        index_to_show=i
+                        break
+                if query[2]=='0':
+                    channel = 0
+                elif query[2]=='1':
+                    channel = 1
+                elif query[2]=='2':
+                    channel = 2
+                
+                self.showInformation(index_to_show,channel)
+
+            else:
+                print('Please input the index of the image you want to see')
+        else:
+            print('Please input the correct command')
+
+    
     def __init__(self):
         self.root = tkinter.Tk()
         self.root.title("Masterpiece")
@@ -106,6 +155,19 @@ class Main:
         self.userImage = ttk.Label(self.big_frame)
         self.userImage.place(x=10, y=10)
 
+        testDataFolderAbsPath = os.path.join(nowDir,'testData')
+        self.tree = ttk.Treeview(self.big_frame, height=20)
+        self.tree.place(x=10,y=200)
+        self.tree.heading('#0', text=testDataFolderAbsPath, anchor='w')
+        # bind click event to treeview
+        self.tree.bind('<<TreeviewSelect>>', self.on_tree_select)
+        self.tree.bind('<Double-1>', self.on_tree_double_click)
+        root_node = self.tree.insert('', 'end', text=testDataFolderAbsPath, open=True)
+        self.process_directory(root_node, testDataFolderAbsPath)
+
+        self.debug_input = tkinter.Text(self.big_frame, height=1, width=50)
+        self.debug_input.place(x=10, y=600)
+        self.debug_input.bind('<Return>', self.on_debug_input_enter)
 
         self.listFrame = ttk.Frame(self.big_frame, width=700, height=90)
         self.listFrame.place(x=260, y=10)
@@ -136,7 +198,7 @@ class Main:
                 line = line.split(',')
                 self.informations[int(line[0])]=line[1:]
 
-    def showInformation(self,rankNumber):
+    def showInformation(self,rankNumber,hist_channel):
         self.nameInfo.config(text=self.informations[self.rank[rankNumber][0]][0])
         self.descInfo.config(text=self.informations[self.rank[rankNumber][0]][1])
         self.yearInfo.config(text=self.informations[self.rank[rankNumber][0]][2])
@@ -147,7 +209,7 @@ class Main:
             self.toolbar.destroy()
         except:
             pass
-        fig = self.makeComparingHist(self.test_hist,self.rank[rankNumber][0],0)
+        fig = self.makeComparingHist(self.test_hist,self.rank[rankNumber][0],hist_channel)
 
         self.canvas = FigureCanvasTkAgg(fig, master=self.graphFrame)
         self.canvas.draw()
