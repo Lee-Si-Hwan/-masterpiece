@@ -44,7 +44,7 @@ def make_histogram(image):
 
 # return as list
 # histogram : np.array()
-def extractValidRange(histogram, ratio = 0.9, error = 0.01):
+def extractValidRange(histogram, ratio = 0.8, error = 0.01):
     area = 0
     standard = sum(histogram)*ratio
     cutline = max(histogram)//2
@@ -63,10 +63,14 @@ def extractValidRange(histogram, ratio = 0.9, error = 0.01):
             cutline += temp
         else:
             cutline -= temp
-    plt.plot(histogram)
-    plt.plot([cutline for x in range(len(histogram)) if True])
-    plt.show()
-    return cutline
+    # plt.plot(histogram)
+    # plt.plot([cutline for x in range(len(histogram)) if True])
+    # plt.show()
+    validRange = list()
+    for index, y in enumerate(histogram):
+        if y > cutline:
+            validRange.append(index)
+    return validRange
 
             
 # return as similarity percent
@@ -80,33 +84,38 @@ def calculate_similarity(histogram, valid_range, to_compare, to_compare_valid_ra
     for value in valid_range:
         if value in to_compare_valid_range:
             intersection += 1
-    similarity = intersection / len(histogram) * 100
+    similarity = intersection / len(valid_range) * 100
     return similarity
 
 
 # ensemble all similarity
 # a,b,c = list
 def ensemble(a, b, c):
-    return (sum(a)+sum(b)+sum(c))/3
+    return (sum(a)+sum(b)+sum(c))/3/9
 
 # compare with histogram
 # return rank list
 def predict(hist_H, hist_S, hist_V):
 
     rank = list()
+
+    validRange_H = list()
+    validRange_S = list()
+    validRange_V = list()
+    for chunk in range(9):
+        validRange_H.append(extractValidRange(hist_H[chunk]))
+        validRange_S.append(extractValidRange(hist_S[chunk]))
+        validRange_V.append(extractValidRange(hist_V[chunk]))
+        
     for index, masterpiece in enumerate(get_masterpieces()):
         similarity_H=list()
         similarity_S=list()
         similarity_V=list()
-        for i in range(9):
-            validRange_H = extractValidRange(hist_H[i])
-            validRange_S = extractValidRange(hist_S[i])
-            validRange_V = extractValidRange(hist_V[i])
+        for chunk in range(9):
+            similarity_H.append(calculate_similarity(hist_H[chunk], validRange_H[chunk], masterpiece['histogram'][0][chunk], masterpiece['validrange'][0][chunk]))
+            similarity_S.append(calculate_similarity(hist_S[chunk], validRange_S[chunk], masterpiece['histogram'][1][chunk], masterpiece['validrange'][1][chunk]))
+            similarity_V.append(calculate_similarity(hist_V[chunk], validRange_V[chunk], masterpiece['histogram'][2][chunk], masterpiece['validrange'][2][chunk]))
 
-
-            similarity_H.append(calculate_similarity(hist_H[i], validRange_H, masterpiece['histogram'][0][i], masterpiece['validrange'][0][i]))
-            similarity_S.append(calculate_similarity(hist_S[i], validRange_S, masterpiece['histogram'][1][i], masterpiece['validrange'][1][i]))
-            similarity_V.append(calculate_similarity(hist_V[i], validRange_V, masterpiece['histogram'][2][i], masterpiece['validrange'][2][i]))
         similarity = ensemble(similarity_H, similarity_S, similarity_V)
         rank.append([index, similarity])
     rank.sort(key=lambda x:x[1], reverse=True)

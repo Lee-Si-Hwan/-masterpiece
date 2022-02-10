@@ -3,7 +3,10 @@ import tkinter.ttk as ttk
 import model
 import os
 import matplotlib
+from matplotlib import pyplot as plt
 from PIL import ImageTk, Image
+import histogram
+
 matplotlib.use('TkAgg')
 from matplotlib.backends.backend_tkagg import (
     FigureCanvasTkAgg, NavigationToolbar2Tk)
@@ -68,6 +71,20 @@ class Main:
         image = image.resize((150,150*image.height//image.width))
         self.userImageImage=ImageTk.PhotoImage(image)
         self.userImage.config(image=self.userImageImage)
+    
+
+    def makeComparingHist(self, data, to_compare, channel):
+        fig = plt.figure()
+        hist = histogram.load(os.path.join(nowDir,f'Dataset/compare/{to_compare}.histogram'))
+        
+        for x in range(1,10):
+            subplot = fig.add_subplot(3,3,x)
+            # remove legend of subplot
+            subplot.legend_ = None
+            subplot.plot(hist['histogram'][channel][x-1],color="g", label="masterpiece")
+            subplot.plot(data[channel][x-1],color="b", label="user")
+        return fig
+    
 
     def __init__(self):
         self.root = tkinter.Tk()
@@ -101,31 +118,35 @@ class Main:
         self.descInfo.place(x=10, y=20)
         self.yearInfo = ttk.Label(infoFrame, text="")
         self.yearInfo.place(x=10, y=40)
-
+        self.percentInfo = ttk.Progressbar(infoFrame, orient="horizontal", length=100, mode="determinate")
+        self.percentInfo.place(x=10, y=60)
+        
         self.graphFrame = ttk.Frame(self.big_frame, width=500, height=400)
         self.graphFrame.place(x=260, y=200)
 
-        self.getInfo()
+        self.getImageInfo()
         self.root.mainloop()
 
-    def getInfo(self): #get information of all images
+    def getImageInfo(self): #get information of all images
         self.informations={}
-        with open(os.path.join(model.datasetDir,"info\\info.csv"),'r',encoding="utf-8") as f:
+        with open(os.path.join(nowDir,"Dataset/info/info.csv"),'r',encoding="utf-8") as f:
             lines = f.readlines()
             for line in lines:
                 line = line.split(',')
                 self.informations[int(line[0])]=line[1:]
 
-    def showInformation(self,k):
-        self.nameInfo.config(text=self.informations[k][0])
-        self.descInfo.config(text=self.informations[k][1])
-        self.yearInfo.config(text=self.informations[k][2])
-        try: 
+    def showInformation(self,rankNumber):
+        self.nameInfo.config(text=self.informations[self.rank[rankNumber][0]][0])
+        self.descInfo.config(text=self.informations[self.rank[rankNumber][0]][1])
+        self.yearInfo.config(text=self.informations[self.rank[rankNumber][0]][2])
+        self.percentInfo.config(value=self.rank[rankNumber][1])
+
+        try:
             self.canvas.get_tk_widget().destroy()
             self.toolbar.destroy()
         except:
             pass
-        fig = model.makeComparingHist(self.test_hist,k)
+        fig = self.makeComparingHist(self.test_hist,self.rank[rankNumber][0],0)
 
         self.canvas = FigureCanvasTkAgg(fig, master=self.graphFrame)
         self.canvas.draw()
@@ -140,13 +161,16 @@ class Main:
     def testModel(self):
         for widget in self.listFrame.winfo_children():
             widget.destroy()
-        data, self.test_hist = model.findNearest(self.userFilename)
+        img = model.load_image(self.userFilename)
+        self.test_hist = model.make_histogram(img)
+        self.rank = model.predict(self.test_hist[0], self.test_hist[1], self.test_hist[2])
         self.images = list()
         for i in range(7):
-            btn = ttk.Button(self.listFrame, text=f"{i+1}", command=lambda k=data[i][2]: self.showInformation(k))
-            image = Image.open(os.path.join(model.datasetDir,f"data\\{data[i][2]}.jpg"))
+            btn = ttk.Button(self.listFrame, text=f"{i+1}", command=lambda k=i: self.showInformation(k))
+            image = Image.open(os.path.join(nowDir,f"Dataset/data/{self.rank[i][0]}.jpg"))
             image2 = ImageTk.PhotoImage(image.resize((80,80*image.height//image.width)))
             self.images.append(image2)
+            
             btn.config(image=self.images[i])
             btn.pack(side=tkinter.LEFT)
 
