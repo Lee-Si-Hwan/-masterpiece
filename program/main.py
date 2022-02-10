@@ -122,6 +122,7 @@ class Main:
                         index_to_show=i
                         break
                 if index_to_show is not None:
+                    channel=0
                     if len(query)>=3:
                         if query[2]=='0':
                             channel = 0
