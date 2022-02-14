@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 import histogram
+import math
 
 nowDir = os.path.dirname(__file__)
 
@@ -93,7 +94,13 @@ def calculate_similarity(histogram, valid_range, to_compare, to_compare_valid_ra
 # ensemble all similarity
 # a,b,c = list
 def ensemble(h, s, v):
-    return (h+s+v)/3
+    return math.sqrt(h*s*v)
+
+def geoMean(list):
+    temp = 1
+    for i in list:
+        temp *= i
+    return math.sqrt(temp)
 
 # compare with histogram
 # return rank list
@@ -118,9 +125,9 @@ def predict(hist_H, hist_S, hist_V,ratio=0.8,error=0.01):
             similarity_S.append(calculate_similarity(hist_S[chunk], validRange_S[chunk], masterpiece['histogram'][1][chunk], masterpiece['validrange'][1][chunk]))
             similarity_V.append(calculate_similarity(hist_V[chunk], validRange_V[chunk], masterpiece['histogram'][2][chunk], masterpiece['validrange'][2][chunk]))
 
-        avg_H = sum(similarity_H)/9
-        avg_S = sum(similarity_S)/9
-        avg_V = sum(similarity_V)/9
+        avg_H = geoMean(similarity_H)
+        avg_S = geoMean(similarity_S)
+        avg_V = geoMean(similarity_V)
         similarity = ensemble(avg_H, avg_S, avg_V)
         rank.append([index, similarity, avg_H, avg_S, avg_V])
     rank.sort(key=lambda x:x[1], reverse=True)
