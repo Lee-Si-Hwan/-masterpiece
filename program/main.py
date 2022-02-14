@@ -141,6 +141,15 @@ class Main:
 
             else:
                 print('Please input the index of the image you want to see')
+        elif query[0]=='Rank':
+            if len(query)>=2:
+                index_to_show=None
+                for i in range(len(self.rank)):
+                    if self.rank[i][0] == int(query[1]):
+                        index_to_show=i
+                        break
+                if index_to_show is not None:
+                    print(self.rank[index_to_show])
         else:
             print('Please input the correct command')
 
