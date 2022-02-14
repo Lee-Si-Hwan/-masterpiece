@@ -205,8 +205,11 @@ class Main:
         with open(os.path.join(nowDir,"Dataset/info/info.csv"),'r',encoding="utf-8") as f:
             lines = f.readlines()
             for line in lines:
-                line = line.split(',')
-                self.informations[int(line[0])]=line[1:]
+                try:
+                    line = line.split(',')
+                    self.informations[int(line[0])]=line[1:]
+                except:
+                    print('exception')
 
     def showInformation(self,rankNumber,hist_channel):
         self.nameInfo.config(text=self.informations[self.rank[rankNumber][0]][0])
