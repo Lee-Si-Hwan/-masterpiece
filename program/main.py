@@ -148,7 +148,7 @@ class Main:
     def __init__(self):
         self.root = tkinter.Tk()
         self.root.title("Masterpiece")
-        self.root.geometry("1000x700+10+10")
+        self.root.geometry("1300x700+10+10")
 
         self.big_frame = ttk.Frame(self.root)
         self.big_frame.pack(fill="both", expand=True)
@@ -238,7 +238,7 @@ class Main:
         self.test_hist = model.make_histogram(img)
         self.rank = model.predict(self.test_hist[0], self.test_hist[1], self.test_hist[2])
         self.images = list()
-        for i in range(7):
+        for i in range(10):
             btn = ttk.Button(self.listFrame, text=f"{i+1}", command=lambda k=i: self.showInformation(k,0))
             image = Image.open(os.path.join(nowDir,f"Dataset/data/{self.rank[i][0]}.jpg"))
             image2 = ImageTk.PhotoImage(image.resize((80,80*image.height//image.width)))
