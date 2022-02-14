@@ -8,7 +8,7 @@ nowDir = os.path.dirname(__file__)
 
 # return masterpieces histograms as list
 def get_masterpieces():
-    masterpiece_num = 38
+    masterpiece_num = 131
     masterpieces = list()
     for x in range(masterpiece_num):
         masterpieces.append(histogram.load(os.path.join(nowDir, f'Dataset/compare/{x}.histogram')))
