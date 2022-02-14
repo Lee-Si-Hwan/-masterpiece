@@ -63,6 +63,8 @@ def extractValidRange(histogram, ratio = 0.8, error = 0.01):
             cutline += temp
         else:
             cutline -= temp
+        if temp == 0:
+            break
     # plt.plot(histogram)
     # plt.plot([cutline for x in range(len(histogram)) if True])
     # plt.show()
@@ -95,7 +97,7 @@ def ensemble(h, s, v):
 
 # compare with histogram
 # return rank list
-def predict(hist_H, hist_S, hist_V):
+def predict(hist_H, hist_S, hist_V,ratio=0.8,error=0.01):
 
     rank = list()
 
@@ -103,9 +105,9 @@ def predict(hist_H, hist_S, hist_V):
     validRange_S = list()
     validRange_V = list()
     for chunk in range(9):
-        validRange_H.append(extractValidRange(hist_H[chunk]))
-        validRange_S.append(extractValidRange(hist_S[chunk]))
-        validRange_V.append(extractValidRange(hist_V[chunk]))
+        validRange_H.append(extractValidRange(hist_H[chunk],ratio,error))
+        validRange_S.append(extractValidRange(hist_S[chunk],ratio,error))
+        validRange_V.append(extractValidRange(hist_V[chunk],ratio,error))
         
     for index, masterpiece in enumerate(get_masterpieces()):
         similarity_H=list()

@@ -1,0 +1,19 @@
+model
+1. extractValidRange(histogram, ratio = 0.8, error = 0.01)
+    -ratio
+    -error
+
+standard = sum(histogram)*ratio
+    cutline = max(histogram)//2
+    temp = max(histogram)//2
+
+결과:
+
+<case 1>
+-testData 수 : 24
+-노이즈 제거 : True
+-HSV 평균 함수 : 산술 평균 [(a+b)/2]
+-9조각 평균 함수 : 산술 평균
+
+=> ratio = 0.15, error = [0.01, 0.02, 0.03]
+=> 평균 예측 랭크: 33.541666666666664
