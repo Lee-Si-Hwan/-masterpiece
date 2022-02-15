@@ -41,6 +41,7 @@ def calculate(data):
         i += 1
     print("low_rank:",low_rank)
     print(get_result)
+    return f'low_rank:{low_rank}\n{get_result}'
 
 
 def hyper(ensemble_func1, ensemble_func2, outputfilenum):
