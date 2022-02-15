@@ -59,7 +59,7 @@ def hyper(ensemble_func1, ensemble_func2, outputfilenum):
                     image = load_image(filepath)
                     h, s, v = make_histogram(image)
                     real_answer = int(filename.split('.')[0])
-                    answer = predict(h, s, v,ratio,error,geoMean,RMS) #파라미터 여기서 조절
+                    answer = predict(h, s, v,ratio,error,ensemble_func1,ensemble_func2) #파라미터 여기서 조절
 
                     rank = None
                     for index, i in enumerate(answer):
@@ -74,9 +74,12 @@ def hyper(ensemble_func1, ensemble_func2, outputfilenum):
                 error += 0.001
                 pbar.update(1)
             ratio += 0.05
-        print(outputfilenum, calculate(result))
+        calculated = calculate(result)
+        print(outputfilenum, calculated)
 
         with open(f'case-{str(outputfilenum)}.txt', 'w') as f:
+            f.write(str(calculated))
+            f.write('\n')
             f.write(str(result))
         input()
 
@@ -88,3 +91,4 @@ for f1 in [arithMean, geoMean, RMS]:
         th = threading.Thread(target=hyper,args=(f1,f2,a))
         th.start()
         a=a+1
+
