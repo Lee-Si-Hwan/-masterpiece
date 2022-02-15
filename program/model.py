@@ -95,8 +95,8 @@ def calculate_similarity(histogram, valid_range, to_compare, to_compare_valid_ra
 # ensemble all similarity
 # a,b,c = list
 def ensemble(h, s, v):
-    # return math.sqrt(h*s*v)
-    return (h+s+v) /3
+    return math.sqrt(h*s*v)
+    # return (h+s+v) /3
 
 def arithMean(list):
     return sum(list)/len(list)
@@ -104,13 +104,16 @@ def arithMean(list):
 def geoMean(list):
     temp = 1
     for i in list:
-        temp *= i
-    return math.sqrt(temp)
+        if i == 0:
+            continue
+        else:
+            temp *= i
+    return (temp)**(1/len(list))
+
 
 # compare with histogram
 # return rank list
-def predict(hist_H, hist_S, hist_V,ratio=0.8,error=0.01, ensemble_func = arithMean, ensemble_func2 = arithMean):
-
+def predict(hist_H, hist_S, hist_V,ratio=0.8,error=0.01, ensemble_func = geoMean, ensemble_func2 = geoMean):
     rank = list()
 
     validRange_H = list()

@@ -21,9 +21,9 @@ def makeData(image):
     return {'histogram':hist, 'validrange':[validRange_H, validRange_S, validRange_V]}
 
 def preprocess():
-    for num in tqdm(range(38,131),desc='preprocessing'):
+    for num in tqdm(range(0,131),desc='preprocessing'):
         pathname = os.path.join(nowDir,'Dataset/data/'+str(num)+'.jpg')
-        pathname = "E:/Images/ArtVee/pic"+str(num)+'.jpg'
+        pathname = "program/Dataset/data/"+str(num)+'.jpg'
         image = model.load_image(pathname)
         image=denoise(image, 30)
         hist = makeData(image)
