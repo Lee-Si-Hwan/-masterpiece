@@ -40,7 +40,7 @@ with tqdm(total = 170) as pbar:
                 image = load_image(filepath)
                 h, s, v = make_histogram(image)
                 real_answer = int(filename.split('.')[0])
-                answer = predict(h, s, v,ratio,error,RMS,arithMean)
+                answer = predict(h, s, v,ratio,error,arithMean,geoMean) #파라미터 여기서 조절
 
                 rank = None
                 for index, i in enumerate(answer):
