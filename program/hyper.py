@@ -15,8 +15,11 @@ def arithMean(list):
 def geoMean(list):
     temp = 1
     for i in list:
-        temp *= i
-    return math.sqrt(temp)
+        if i == 0:
+            continue
+        else:
+            temp *= i
+    return (temp)**(1/len(list))
 
 def RMS(list):
     temp = 0
