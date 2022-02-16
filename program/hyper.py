@@ -7,7 +7,7 @@ nowDir = os.path.dirname(__file__)
 filenames = next(walk(os.path.join(nowDir,'testData')), (None, None, []))[2]
 print(filenames)
 
-result = list()
+
 
 def arithMean(list):
     return sum(list)/len(list)
@@ -45,6 +45,7 @@ def calculate(data):
 
 
 def hyper(ensemble_func1, ensemble_func2, outputfilenum):
+    result = list()
     with tqdm(total = 170, desc=str(outputfilenum)) as pbar:
         ratio = 0.1
         while ratio <= 0.9:
@@ -80,16 +81,61 @@ def hyper(ensemble_func1, ensemble_func2, outputfilenum):
 
         with open(f'case-{str(outputfilenum)}.txt', 'w') as f:
             f.write(str(calculated))
-            f.write('\n')
+            f.write('\n\n\n')
             f.write(str(result))
-        input()
+        
 
-import threading
+hist_cache={}
+for filename in filenames:
+    filepath = os.path.join(nowDir,'testData',filename)
+    image = load_image(filepath)
+    hist_cache[filename]=make_histogram(image)
+
+def hyper2(ensemble_func1, ensemble_func2, outputfilenum):
+    result = list()
+    ratio = 0.15
+    error = 0.001
+    #print(f"{ratio} {error}")
+    ranklist = list() #전체 테스트 파일에 대한 랭크 리스트
+    sumrank = 0 #해당 파라미터에 대한 정확도 평균
+    for filename in filenames:
+        # print('\t'+filename)
+        #filepath = os.path.join(nowDir,'testData',filename)
+        #image = load_image(filepath)
+        #h, s, v = make_histogram(image)
+        h,s,v = hist_cache[filename]
+        real_answer = int(filename.split('.')[0])
+        answer = predict(h, s, v,ratio,error,ensemble_func1,ensemble_func2) #파라미터 여기서 조절
+
+        rank = None
+        for index, i in enumerate(answer):
+            if i[0]==real_answer:
+                rank = index
+                break
+        print(filename,rank)
+        if rank is not None:
+            ranklist.append([filename,rank])
+            sumrank += rank
+    sumrank /= len(filenames)
+    result.append([sumrank, ratio, error,ranklist])
+
+    #calculated = calculate2(result)
+    
+    #print(outputfilenum, calculated)
+
+    with open(f'Case-{str(outputfilenum)}.txt', 'w') as f:
+        #f.write(str(calculated))
+        #f.write('\n')
+        f.write(str(result))
+    
+
+
+# import threading
 a=1
 for f1 in [arithMean, geoMean, RMS]:
     for f2 in [arithMean, geoMean, RMS]:
         print(a)
-        th = threading.Thread(target=hyper,args=(f1,f2,a))
-        th.start()
+        # th = threading.Thread(target=hyper2,args=(f1,f2,a))
+        # th.start()
+        hyper(f1,f2,a)
         a=a+1
-
