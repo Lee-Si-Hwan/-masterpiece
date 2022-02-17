@@ -25,7 +25,7 @@ def preprocess():
         pathname = os.path.join(nowDir,'Dataset/data/'+str(num)+'.jpg')
         pathname = "program/Dataset/data/"+str(num)+'.jpg'
         image = model.load_image(pathname)
-        image=denoise(image, 30)
+        # image=denoise(image, 30)
         hist = makeData(image)
         histogram.save(os.path.join(nowDir,f'Dataset/compare/{num}.histogram'),hist)
 
