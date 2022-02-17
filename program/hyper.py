@@ -7,7 +7,6 @@ nowDir = os.path.dirname(__file__)
 filenames = next(walk(os.path.join(nowDir,'testData')), (None, None, []))[2]
 print(filenames)
 
-result = list()
 
 def arithMean(list):
     return sum(list)/len(list)
@@ -45,6 +44,8 @@ def calculate(data):
 
 
 def hyper(ensemble_func1, ensemble_func2, outputfilenum):
+    result = list()
+
     with tqdm(total = 170, desc=str(outputfilenum)) as pbar:
         ratio = 0.1
         while ratio <= 0.9:
@@ -82,14 +83,18 @@ def hyper(ensemble_func1, ensemble_func2, outputfilenum):
             f.write(str(calculated))
             f.write('\n')
             f.write(str(result))
-        input()
+
+def asdf(f1, f2,a):
+    print(a, f1([1,2,3,4]))
+    print(a, f2([1,2,3,4]))
 
 import threading
 a=1
 for f1 in [arithMean, geoMean, RMS]:
     for f2 in [arithMean, geoMean, RMS]:
+        # th = threading.Thread(target=hyper,args=(f1,f2,a))
+        # th.start()
         print(a)
-        th = threading.Thread(target=hyper,args=(f1,f2,a))
-        th.start()
+        hyper(f1,f2,a)
         a=a+1
 
